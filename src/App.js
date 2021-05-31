@@ -1,16 +1,24 @@
 import { useState, useEffect, Fragment } from "react";
 import BeatLoader from "react-spinners/BeatLoader";
 import axios from "axios";
+import Article from "./Article";
 
 export default function App() {
   const [hackerNews, setHackerNews] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  // `https://hn.algolia.com/api/v1/search_by_date?tags=story&hitsPerPage=${pageHits}&restrictSearchableAttributes=title`;
 
   useEffect(() => {
     setIsLoading(true);
     axios
-      .get("http://hn.algolia.com/api/v1/search?query=foo&tags=story")
+      .get(
+        `https://hn.algolia.com/api/v1/search_by_date?${
+          searchQuery && `query=${searchQuery}&`
+        }tags=story&restrictSearchableAttributes=title`
+      )
       .then((response) => {
         console.log(response.data.hits);
         setHackerNews(response.data.hits);
@@ -22,7 +30,13 @@ export default function App() {
 
         setIsLoading(false);
       });
-  }, []);
+  }, [searchQuery]);
+
+  // Event listener: get user search query
+  const handleSearch = (event) => {
+    event.preventDefault();
+    setSearchQuery(event.currentTarget.searchQueryInput.value);
+  };
 
   return (
     <>
@@ -35,7 +49,7 @@ export default function App() {
             HN Clone
           </a>
 
-          <form class="d-flex col-10" onSubmit={handleSearchQuery}>
+          <form class="d-flex col-10" onSubmit={handleSearch}>
             <input
               class="form-control border-white"
               type="search"
@@ -49,10 +63,10 @@ export default function App() {
           </form>
         </nav>
       </header>
-      <main
-        className={`container-lg py-2 ${loading ? "bg-white" : "bg-beige"}`}
-      >
-        {/* Items go here */}
+      <main className="container-lg py-2 bg-orange">
+        <ol>
+          {hackerNews && hackerNews.map((article) => <Article {...article} />)}
+        </ol>
       </main>
     </>
     // <div className="App">
