@@ -1,17 +1,18 @@
-import { useState, useEffect, Fragment } from 'react';
-import BeatLoader from 'react-spinners/BeatLoader';
-import axios from 'axios';
+import { useState, useEffect, Fragment } from "react";
+import BeatLoader from "react-spinners/BeatLoader";
+import axios from "axios";
 
-import DisplayResults from './DisplayResults';
-import DisplayError from './DisplayError';
+import DisplayResults from "./DisplayResults";
+import DisplayError from "./DisplayError";
 
 export default function App() {
   const [hackerNews, setHackerNews] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
+  const [page, setPage] = useState(0);
 
-  // `https://hn.algolia.com/api/v1/search_by_date?tags=story&hitsPerPage=${pageHits}&restrictSearchableAttributes=title`;
+
 
   useEffect(() => {
     const refreshNews = (searchQuery) => {
@@ -20,7 +21,7 @@ export default function App() {
         .get(
           `https://hn.algolia.com/api/v1/search_by_date?${
             searchQuery && `query=${searchQuery}&`
-          }tags=story&restrictSearchableAttributes=title`
+          }tags=story&restrictSearchableAttributes=title&page=${page}`
         )
         .then((response) => {
           console.log(response.data.hits);
@@ -44,11 +45,12 @@ export default function App() {
     }, 1000 * 60 * 5);
 
     return () => clearInterval(autoRefresh);
-  }, [searchQuery]);
+  }, [searchQuery, page]);
 
   // Event listener: get user search query
   const handleSearch = (event) => {
     event.preventDefault();
+    setPage(0);
     setSearchQuery(event.currentTarget.searchQueryInput.value);
   };
 
@@ -85,6 +87,8 @@ export default function App() {
             hackerNews={hackerNews}
             searchQuery={searchQuery}
             isError={isError}
+            page={page}
+            setPage={setPage}
           />
         )}
       </main>
