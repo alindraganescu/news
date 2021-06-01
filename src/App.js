@@ -1,13 +1,14 @@
-import { useState, useEffect, Fragment } from "react";
-import BeatLoader from "react-spinners/BeatLoader";
-import axios from "axios";
-import Article from "./Article";
+import { useState, useEffect, Fragment } from 'react';
+import BeatLoader from 'react-spinners/BeatLoader';
+import axios from 'axios';
+import Article from './Article';
+import DisplayResults from './DisplayResults';
 
 export default function App() {
   const [hackerNews, setHackerNews] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState('');
 
   // `https://hn.algolia.com/api/v1/search_by_date?tags=story&hitsPerPage=${pageHits}&restrictSearchableAttributes=title`;
 
@@ -64,21 +65,11 @@ export default function App() {
         </nav>
       </header>
       <main className="container-lg py-2 bg-orange">
-        <ol>
-          {hackerNews && hackerNews.map((article) => <Article {...article} />)}
-        </ol>
+        <BeatLoader loading={isLoading} />
+        {!isLoading && (
+          <DisplayResults hackerNews={hackerNews} searchQuery={searchQuery} />
+        )}
       </main>
     </>
-    // <div className="App">
-    //   <h1>Hacker News</h1>
-    //   {isError && <h3>An enormous error has occured</h3>}
-    //   {!hackerNews ? (
-    //     <BeatLoader color="black" loading={isLoading} size={30} />
-    //   ) : (
-    //     hackerNews.map((hit) => {
-    //       return <p>{hit.title}</p>;
-    //     })
-    //   )}
-    // </div>
   );
 }
