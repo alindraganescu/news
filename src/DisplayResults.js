@@ -1,10 +1,10 @@
 import React from 'react';
 import Article from './Article';
+import NoMatch from './NoMatch';
 
-export default function DisplayResults({ hackerNews, searchQuery }) {
+export default function DisplayResults({ hackerNews, searchQuery, isError }) {
   const displayContent = () => {
-    console.log('rendered');
-    if (hackerNews && hackerNews.length) {
+    if (!isError && hackerNews && hackerNews.length) {
       return (
         <ol>
           {hackerNews.map((article) => {
@@ -15,8 +15,8 @@ export default function DisplayResults({ hackerNews, searchQuery }) {
     }
   };
 
-  if (searchQuery && !hackerNews.length) {
-    console.log('no results');
+  if (!isError && searchQuery && !hackerNews.length) {
+    return <NoMatch />;
   }
 
   return <>{displayContent()}</>;

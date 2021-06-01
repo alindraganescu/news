@@ -1,8 +1,9 @@
 import { useState, useEffect, Fragment } from 'react';
 import BeatLoader from 'react-spinners/BeatLoader';
 import axios from 'axios';
-import Article from './Article';
+
 import DisplayResults from './DisplayResults';
+import DisplayError from './DisplayError';
 
 export default function App() {
   const [hackerNews, setHackerNews] = useState();
@@ -13,24 +14,36 @@ export default function App() {
   // `https://hn.algolia.com/api/v1/search_by_date?tags=story&hitsPerPage=${pageHits}&restrictSearchableAttributes=title`;
 
   useEffect(() => {
+    const refreshNews = (searchQuery) => {
+      setIsLoading(true);
+      axios
+        .get(
+          `https://hn.algolia.com/api/v1/search_by_date?${
+            searchQuery && `query=${searchQuery}&`
+          }tags=story&restrictSearchableAttributes=title`
+        )
+        .then((response) => {
+          console.log(response.data.hits);
+          setHackerNews(response.data.hits);
+          setIsLoading(false);
+        })
+        .catch((error) => {
+          console.log(error);
+          setIsError(true);
+          setIsLoading(false);
+        });
+    };
     setIsLoading(true);
-    axios
-      .get(
-        `https://hn.algolia.com/api/v1/search_by_date?${
-          searchQuery && `query=${searchQuery}&`
-        }tags=story&restrictSearchableAttributes=title`
-      )
-      .then((response) => {
-        console.log(response.data.hits);
-        setHackerNews(response.data.hits);
+    setIsError(false);
+    // Fetch news on inital loading
+    refreshNews(searchQuery);
 
-        setIsLoading(false);
-      })
-      .catch((error) => {
-        console.log(error);
+    // Fetch news every x seconds
+    let autoRefresh = setInterval(() => {
+      refreshNews(searchQuery);
+    }, 1000 * 60 * 5);
 
-        setIsLoading(false);
-      });
+    return () => clearInterval(autoRefresh);
   }, [searchQuery]);
 
   // Event listener: get user search query
@@ -64,10 +77,15 @@ export default function App() {
           </form>
         </nav>
       </header>
-      <main className="container-lg py-2 bg-orange">
+      <main className="container-lg py-2 bg-white">
+        {isError && <DisplayError />}
         <BeatLoader loading={isLoading} />
         {!isLoading && (
-          <DisplayResults hackerNews={hackerNews} searchQuery={searchQuery} />
+          <DisplayResults
+            hackerNews={hackerNews}
+            searchQuery={searchQuery}
+            isError={isError}
+          />
         )}
       </main>
     </>
