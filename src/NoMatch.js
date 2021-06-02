@@ -5,6 +5,7 @@ export default function NoMatch() {
     <div className="container-fluid d-flex align-items-center flex-column">
       <p className="display-5">No Matches</p>
       <iframe
+        title="noMatches"
         src="https://giphy.com/embed/l4FGEhHXgExT9UquA"
         width="480"
         height="356"

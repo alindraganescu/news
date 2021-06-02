@@ -1,18 +1,16 @@
-import { useState, useEffect, Fragment } from "react";
-import BeatLoader from "react-spinners/BeatLoader";
-import axios from "axios";
+import { useState, useEffect, Fragment } from 'react';
+import BeatLoader from 'react-spinners/BeatLoader';
+import axios from 'axios';
 
-import DisplayResults from "./DisplayResults";
-import DisplayError from "./DisplayError";
+import DisplayResults from './DisplayResults';
+import DisplayError from './DisplayError';
 
 export default function App() {
   const [hackerNews, setHackerNews] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState('');
   const [page, setPage] = useState(0);
-
-
 
   useEffect(() => {
     const refreshNews = (searchQuery) => {
