@@ -34,6 +34,9 @@ export default function DisplayResults({
           <button className="btn btn-outline-warning" onClick={goToNext}>
             Next
           </button>
+          <footer className="text-center mt-5 mb-3">
+            <em> created by zorro, tuttiamore & claurennt </em>
+          </footer>
         </>
       );
     }

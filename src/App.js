@@ -12,8 +12,6 @@ export default function App() {
   const [searchQuery, setSearchQuery] = useState("");
   const [page, setPage] = useState(0);
 
-
-
   useEffect(() => {
     const refreshNews = (searchQuery) => {
       setIsLoading(true);
@@ -92,6 +90,7 @@ export default function App() {
           />
         )}
       </main>
+     
     </>
   );
 }
