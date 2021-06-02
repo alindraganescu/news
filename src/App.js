@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, Fragment } from "react";
 import BeatLoader from "react-spinners/BeatLoader";
 import axios from "axios";
 
@@ -11,6 +11,8 @@ export default function App() {
   const [isError, setIsError] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [page, setPage] = useState(0);
+
+
 
   useEffect(() => {
     const refreshNews = (searchQuery) => {
