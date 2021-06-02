@@ -19,19 +19,11 @@ export default function DisplayResults({
     setPage((page) => page + 1);
   };
 
-  const listNumberStart = () => {
-    if (page === 0) {
-      return page + 1;
-    } else {
-      return page * 20 + 1;
-    }
-  };
-
   const displayContent = () => {
     if (!isError && hackerNews && hackerNews.length) {
       return (
         <>
-          <ol start={listNumberStart()}>
+          <ol start={page * 20 + 1}>
             {hackerNews.map((article) => {
               return <Article {...article} />;
             })}
